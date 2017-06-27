@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>{% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        iframe {
+            border: none;
+            padding: 0;
+            margin: 0;
+            width:100vw;
+            height:100vh;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="{% url 'simplecv:docx-html-view' %}"></iframe>
+</body>
+</html>

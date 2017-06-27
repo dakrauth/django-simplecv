@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    padding: 0;
+    color: #333;
+    font-family: 'Lato', helvetica, arial, sans-serif;
+    font-size: 15px;
+}
+a { text-decoration: none; }
+.text-center { text-align: center }
+img { border: none; }
+footer {
+    margin: 1em 0 ;
+    padding-top: 1em;
+    border-top: 1px solid #eee;
+    text-align: center;
+    color: #aaa;
+    font-size: smaller;
+}
+h1 { font-size: 1.6em; margin: 0; }
+h2 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 1.4em;
+    padding: 0;
+    margin: .5em 0;
+    color: #777;
+    border-bottom: 2px solid #aaa;
+}
+h3, h4 { padding-left: 2px; }
+h3 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #eee;
+    padding: 4px 6px 2px 2px;
+}
+h4 { color: #555; font-size: 1em; margin: 2px 0; }
+p { margin: 2px 0; }
+.skills { clear: both; margin: 0; }
+.skillarea {
+    margin: 1px 0;
+    padding: 0;
+    float: left;
+    clear: left;
+    width: 8em;
+    font-weight: 600;
+}
+.skillset { margin: 0; padding: 0; float: left; }
+.experience { margin-bottom: 1em; }
+.experience .location { float: right; }
+.experience p { padding-left: 2px; font-style: italic; }
+.experience ul { padding-left: 0.5em; }
+.experience p, .experience ul { 
+    margin: 0; text-align: justify; 
+}
+.location { font-style: italic; font-weight: normal; font-size: smaller; }
+.period { font-weight: normal; font-size: smaller; display: block; }
+ul.achievements { 
+    margin: 0 0 0.75em 0;
+    padding: 0 0 0 1.25em;
+    list-style-type: square;
+}
+.clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+dt { font-weight: 400; }
+
+@media print {
+    body {
+        font-size: .65em;
+        margin: 0;
+        padding: 0;
+        color: #000;
+    }
+    .cv {
+        width: 7.5in;
+    }
+    .cv h3 { border-bottom: 1px solid #999; }
+    a { color: #333; }
+    .experience dl { padding-left: 4px; border-left: none; }
+    .vcard.header { text-align: center; }
+    .print-hide { display: none; }
+}
+@media screen {
+    .vcard .fn, .vcard .web {
+        padding-left: 90px;
+    }
+    .header > img {
+        width: 80px;
+        border-radius: 40px;
+        float: left;
+    }
+    .cv {
+        padding: 0 4em;
+    }
+    .cv-header {
+        padding: 2em 4em;
+        background-color: #eee;
+        border-bottom: 4px solid #999;
+    }
+    .formats {
+        position: absolute;
+        top: 2px;
+        right: 4em;
+        text-align: right;
+    }
+    body { font-family: Verdana sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Fjord One', Georgia, serif; }
+    h2 { border-bottom: 1px solid; }
+}
+

@@ -1,0 +1,30 @@
+{{ cv.name }}
+e: {{ cv.email }} | w: {{ cv.url }} | m: {{ cv.tel }}
+{% load simplecv_tags %}
+Summary
+=======
+
+{{ cv.summary|wrap }}
+
+Skills
+======
+{% for skill in cv.skills %}
+{{ skill.key|stringformat:"s:"|width:"12" }} {{ skill.value }} {% endfor %}
+
+Work Experience
+===============
+{% for exp in cv.experience %}
+[{{ exp.org }} - {{ exp.location }}]{% for pos in exp.positions %}
+{{ pos.title }} ({{ pos.period.from }} - {{ pos.period.to }})
+{% if pos.description %}{{ pos.description|wrap }}{% endif %}
+{% if pos.achievements %}{% for ach in pos.achievements %}
+* {{ ach|wrap:"  " }}{% endfor %}{% endif %}
+{% endfor %}{% endfor %}
+{% if education %}
+Education
+=========
+{% for e in cv.education %}
+{{ e.entity }}, {{ e.location }} | {{ e.degree }} {{ e.discipline }}{% endfor %}
+{% endif %}
+~ Last Modified: {{ last_mod }} ~
+

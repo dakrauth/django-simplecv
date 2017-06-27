@@ -1,0 +1,4 @@
+reportlab==3.4.0
+pdfdocument==3.2
+python-docx==0.8.6
+pydocx==0.9.10
