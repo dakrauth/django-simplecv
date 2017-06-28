@@ -34,4 +34,6 @@ Usage
 License
 -------
 
-django-simplecv is available under the [MIT](django-simplecv/LICENSE) license.
+django-simplecv is available under the `MIT license`_.
+
+.. _MIT license: LICENSE
