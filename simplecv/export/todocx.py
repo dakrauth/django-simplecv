@@ -28,7 +28,12 @@ def convert(cv, stream):
     # if image: {image}
 
     doc.add_heading(cv['name'])
-    doc.add_paragraph('e: {email} · w: {url} · m: {tel}'.format(**cv))
+    urls = ' · '.join(cv['urls'])
+    doc.add_paragraph('{email} · {tel}{urls}'.format(
+        email=cv['email'],
+        tel=cv['tel'],
+        urls=' · ' + urls if urls else ''
+    ))
     
     doc.add_heading('Summary', level=2)
     doc.add_paragraph(cv['summary'])

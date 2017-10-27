@@ -31,7 +31,12 @@ def convert(cv, stream):
     doc = PDFDocumentCV(stream)
     doc.init_report()
     doc.h1(cv['name'])
-    doc.p('e: {email} · w: {url} · m: {tel}'.format(**cv))
+    urls = ' · '.join(cv['urls'])
+    doc.p('{email} · {tel} · {urls}'.format(
+        email=cv['email'],
+        tel=cv['tel'],
+        urls=urls
+    ))
     
     doc.h2('Summary')
     doc.p(cv['summary'])

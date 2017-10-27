@@ -1,5 +1,5 @@
 {{ cv.name }}
-e: {{ cv.email }} | w: {{ cv.url }} | m: {{ cv.tel }}
+{{ cv.email }} | {{ cv.tel }}{% for url in cv.urls %} | {{ url }}{% endfor %}
 {% load simplecv_tags %}
 Summary
 =======

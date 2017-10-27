@@ -7,8 +7,8 @@ from django.conf import settings
 JSON_TEMPLATE = '''{
     "name": "",
     "email": "",
-    "url": "",
     "tel": "",
+    "urls": [],
     "image": "",
     "summary": "",
     "skills": [{"key": "", "value": ""}],

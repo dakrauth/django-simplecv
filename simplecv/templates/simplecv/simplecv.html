@@ -30,11 +30,12 @@
             {{#if image}}<img class="print-hide" src="{{ image }}">{{/if}}
             <h1 class="fn n">{{ name }}</h1>
             <div class="web">
-                <span class="email">e: {{ email }}</span>
+                <span class="email">{{ email }}</span>
                 <br>
-                <a class="website" href="{{ url }}">w: {{ url }}</a>
+                <a href="tel:{{ tel }}">{{ tel }}</a>
+                {{#each urls}}
                 <br>
-                <a href="tel:{{ tel }}">m: {{ tel }}</a>
+                <a class="website" href="{{ this }}">{{ this }}</a>{{/each}}
             </div>
         </div>
     </div>
