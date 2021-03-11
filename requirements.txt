@@ -1,4 +1,4 @@
-reportlab==3.4.0
-pdfdocument==3.2
-python-docx==0.8.6
+reportlab==3.5.59
+pdfdocument==4.0
+-e git+git@github.com:python-openxml/python-docx.git@da75fcf#egg=python-docx
 pydocx==0.9.10
