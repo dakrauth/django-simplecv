@@ -1,8 +1,10 @@
 import re
 import json
+
 from django import http
 from django.shortcuts import render
 from pydocx import PyDocX
+
 from .utils import load_cv, content_types
 from .export import export
 
@@ -15,7 +17,6 @@ def set_content_disposition(response, filename, as_download=True):
 
 
 def cv_view(request, ext='html'):
-    #import ipdb; ipdb.set_trace()
     ext = ext.lower()
     if ext not in content_types:
         raise http.Http404('Unknown CV conversion type: "{}"'.format(ext))

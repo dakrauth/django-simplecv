@@ -10,7 +10,6 @@
 <body>
     <div class="formats print-hide">
         <div>View as:
-            <a href="{% url 'simplecv:docx-view' %}">MS Word</a> |
             <a href="{% url 'simplecv:simplecv-format' 'pdf' %}">PDF</a> |
             <a href="{% url 'simplecv:simplecv-format' 'txt' %}">Plain Text</a>
         </div>
@@ -86,12 +85,19 @@
 </div>
 </script>
 {% endverbatim %}
-{% load simplecv_tags %}
-<script src="{% static "simplecv/simplecv.js" %}"></script>
+{{ cv|json_script:"cv-data" }}
 <script>
-    (function() {
-        CV.render('.cv-container', {{ cv|json:"4"|safe }});
-    }());
+    const cvData = JSON.parse(document.getElementById('cv-data').textContent);
+    cvData.email = new Handlebars.SafeString(cvData.email);
+    document.querySelector('.cv-container').innerHTML = Handlebars.compile(
+        document.getElementById('cv-html').textContent
+    )(cvData);
+
+    document.querySelector('title').textContent = 'CV for ' + cvData.name;
+    document.querySelector('.print-link').addEventListener('click', evt=>{
+        window.print();
+        evt.preventDefault();
+    });
 </script>
 </body>
 </html>

@@ -35,16 +35,18 @@ h3 {
 }
 h4 { color: #555; font-size: 1em; margin: 2px 0; }
 p { margin: 2px 0; }
-.skills { clear: both; margin: 0; }
-.skillarea {
+.website { display: block; }
+.skills {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 8em auto;
+}
+.skills > dt {
     margin: 1px 0;
     padding: 0;
-    float: left;
-    clear: left;
-    width: 8em;
     font-weight: 600;
 }
-.skillset { margin: 0; padding: 0; float: left; }
+.skills > dd { margin: 0; padding: 0; }
 .experience { margin-bottom: 1em; }
 .experience .location { float: right; }
 .experience p { padding-left: 2px; font-style: italic; }
@@ -65,7 +67,14 @@ ul.achievements {
     clear: both;
 }
 dt { font-weight: 400; }
-
+.print-link {
+    display: inline-block;
+    border:  1px solid #777;
+    border-radius: 4px;
+    padding: 2px 4px;
+    background-color: #777;
+    color:  #fff;
+}
 @media print {
     body {
         font-size: .65em;
