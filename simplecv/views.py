@@ -3,7 +3,6 @@ import json
 
 from django import http
 from django.shortcuts import render
-from pydocx import PyDocX
 
 from .utils import load_cv, content_types
 from .export import export
@@ -26,10 +25,9 @@ def cv_view(request, ext='html'):
     filename = '{}-CV.{}'.format(re.sub(r'[^\w-]', '', cv['name']), ext)
 
     response = http.HttpResponse(content_type=content_types[ext])
-    if ext == 'docx':
-        if as_download:
-            set_content_disposition(response, filename, as_download)
-            return export(response, cv, ext)
+    if ext == 'docx' and as_download:
+        set_content_disposition(response, filename, as_download)
+        return export(response, cv, ext)
 
     elif ext == 'pdf':
         set_content_disposition(response, filename, as_download)
@@ -39,13 +37,3 @@ def cv_view(request, ext='html'):
         set_content_disposition(response, filename)
 
     return export(response, cv, ext)
-
-
-def docx_view(request):
-    return render(request, 'simplecv/docx.html', {})
-
-
-def docx_html_view(request):
-    cv = load_cv()
-    stream = export(None, cv, 'docx')
-    return http.HttpResponse(PyDocX.to_html(stream))

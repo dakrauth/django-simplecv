@@ -1,7 +1,10 @@
 from datetime import datetime
+
 from docx import Document
 from docx.shared import Inches, Pt
+
 from ..utils import load_cv, max_column_length
+
 
 def convert(cv, stream):
     doc = Document()

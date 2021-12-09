@@ -35,7 +35,11 @@ h3 {
 }
 h4 { color: #555; font-size: 1em; margin: 2px 0; }
 p { margin: 2px 0; }
-.website { display: block; }
+.web > ul {
+    padding: 0;
+    margin:  0;
+    list-style-type: none;
+}
 .skills {
     margin: 0;
     display: grid;
@@ -104,7 +108,7 @@ dt { font-weight: 400; }
         padding: 0 4em;
     }
     .cv-header {
-        padding: 2em 4em;
+        padding: 1em 4em;
         background-color: #eee;
         border-bottom: 4px solid #999;
     }

@@ -1,7 +1,8 @@
 <!DOCTYPE html>{% load static %}
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title></title>
     <link href="https://fonts.googleapis.com/css?family=Fjord+One" rel="stylesheet">
     <link rel="stylesheet" href="{% static "simplecv/simplecv.css" %}">
@@ -9,16 +10,18 @@
 </head>
 <body>
     <div class="formats print-hide">
-        <div>View as:
-            <a href="{% url 'simplecv:simplecv-format' 'pdf' %}">PDF</a> |
-            <a href="{% url 'simplecv:simplecv-format' 'txt' %}">Plain Text</a>
-        </div>
-        <div>Download as:
-            <a href="{% url 'simplecv:simplecv-format' 'docx' %}?download">MS Word</a> |
-            <a href="{% url 'simplecv:simplecv-format' 'pdf' %}?download">PDF</a> |
-            <a href="{% url 'simplecv:simplecv-format' 'txt' %}?download">Plain Text</a>
-        </div>
-        <div><a class="print-link" href="#">Print</a></div>
+        <select id="viewAs">
+            <option value="">-- View as --</option>
+            <option value="{% url 'simplecv:simplecv-format' 'pdf' %}">PDF</option>
+            <option value="{% url 'simplecv:simplecv-format' 'txt' %}">Plain Text</option>
+        </select>
+        <select id="downloadAs">
+            <option value="">-- Download as --</option>
+            <option value="{% url 'simplecv:simplecv-format' 'pdf' %}?download">PDF</option>
+            <option value="{% url 'simplecv:simplecv-format' 'txt' %}?download">Plain Text</option>
+            <option value="{% url 'simplecv:simplecv-format' 'docx' %}?download">MS Word</option>
+        </select>
+        <button class="print-link">Print</button>
     </div>
     <div class="cv-container"></div>
     
@@ -30,11 +33,15 @@
             <h1 class="fn n">{{ name }}</h1>
             <div class="web">
                 <span class="email">{{ email }}</span>
-                <br>
+                &middot;
                 <a href="tel:{{ tel }}">{{ tel }}</a>
-                {{#each urls}}
-                <br>
-                <a class="website" href="{{ this }}">{{ this }}</a>{{/each}}
+                {{#if urls}}
+                <ul>
+                    {{#each urls}}
+                    <li><a href="{{ this }}">{{ this }}</a></li>
+                    {{/each}}
+                </ul>
+                {{/if}}
             </div>
         </div>
     </div>
@@ -81,7 +88,10 @@
             </div>{{/each}}
         </div>
     </div>
-    <footer><em>Last Modified: {{ last_mod }}</em></footer>
+    <footer>
+        <em>Last Modified: {{ last_mod }}</em><br>
+        Generated with <a href="https://github.com/dakrauth/django-simplecv">django-simplecv</a>
+    </footer>
 </div>
 </script>
 {% endverbatim %}
@@ -98,6 +108,16 @@
         window.print();
         evt.preventDefault();
     });
+
+    for(const id of ['viewAs', 'downloadAs']) {
+        document.getElementById(id).addEventListener('change', evt=>{
+            const select = evt.target;
+            if(select.selectedIndex > 0) {
+                console.log(select.selectedOptions[0].value);
+                window.location.assign(select.selectedOptions[0].value);
+            }
+        });
+    }
 </script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 import os
 from io import BytesIO
+
 from django.template.loader import render_to_string
+
 from .todocx import convert as docx_convert
 from .topdf import convert as pdf_convert
 
@@ -20,15 +22,17 @@ EXPORTERS = {
     'html': make_template_converter('simplecv/simplecv.html')
 }
 
+
 all_exports_types = set(EXPORTERS.keys()) 
 
+
 def export(stream, cv, kind):
-    func = EXPORTERS.get(kind)
-    if func is None:
+    exporter = EXPORTERS.get(kind)
+    if exporter is None:
         raise KeyError('Unknown exporter: "{}"'.format(kind))
 
     if not stream:
         stream = BytesIO()
 
-    func(cv, stream)
+    exporter(cv, stream)
     return stream
