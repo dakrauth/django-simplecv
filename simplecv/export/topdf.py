@@ -4,7 +4,8 @@ from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_CENTER
 from reportlab.platypus.flowables import HRFlowable
 
-from ..utils import load_cv, max_column_length
+from ..utils import max_column_length
+
 
 class PDFDocumentCV(PDFDocument):
 
@@ -28,28 +29,31 @@ class PDFDocumentCV(PDFDocument):
 
 
 def convert(cv, stream):
+    data = cv.data
     doc = PDFDocumentCV(stream)
     doc.init_report()
-    doc.h1(cv['name'])
-    urls = ' · '.join(cv['urls'])
-    doc.p('{email} · {tel} · {urls}'.format(
-        email=cv['email'],
-        tel=cv['tel'],
+    doc.h1(data['name'])
+    doc.hr_mini()
+
+    urls = ' · '.join(data['urls'])
+    doc.p('{email} · {tel}\n{urls}'.format(
+        email=data['email'],
+        tel=data['tel'],
         urls=urls
     ))
     
     doc.h2('Summary')
-    doc.p(cv['summary'])
+    doc.p(data['summary'])
     
     doc.h2('Skills')
-    mx = 1 + max_column_length(cv['skills'], 'key')
+    mx = 1 + max_column_length(data['skills'], 'key')
     doc.table(
-        [(sk['key'], sk['value']) for sk in cv['skills']],
+        [(sk['key'], sk['value']) for sk in data['skills']],
         [inch, inch * 5.5]
     )
 
     doc.h2('Work Experience')
-    for i, exp in enumerate(cv['experience']):
+    for i, exp in enumerate(data['experience']):
         if i:
             doc.spacer()
 
@@ -71,9 +75,9 @@ def convert(cv, stream):
             if achs:
                 doc.ul(achs)
 
-    if cv['education']:
+    if data['education']:
         doc.h2('Education')
-        for i, edu in enumerate(cv['education']):
+        for i, edu in enumerate(data['education']):
             deg = edu.get('degree', '')
             dis = edu.get('descipline', '')
             doc.p('{}, {}{}{}'.format(
@@ -85,7 +89,7 @@ def convert(cv, stream):
 
     doc.spacer()
     doc.hr_mini()
-    doc.smaller('Last Modified: {}'.format(cv['last_mod']))
+    doc.smaller('Last Modified: {}'.format(cv.date_updated))
     doc.generate()
     return doc
 

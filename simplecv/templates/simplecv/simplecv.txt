@@ -1,19 +1,19 @@
-{{ cv.name }}
-{{ cv.email }} | {{ cv.tel }}{% for url in cv.urls %} | {{ url }}{% endfor %}
+{{ cv.data.name }}
+{{ cv.data.email }} | {{ cv.data.tel }}{% for url in cv.data.urls %} | {{ url }}{% endfor %}
 {% load simplecv_tags %}
 Summary
 =======
 
-{{ cv.summary|wrap }}
+{{ cv.data.summary|wrap }}
 
 Skills
 ======
-{% for skill in cv.skills %}
+{% for skill in cv.data.skills %}
 {{ skill.key|stringformat:"s:"|width:"12" }} {{ skill.value }} {% endfor %}
 
 Work Experience
 ===============
-{% for exp in cv.experience %}
+{% for exp in cv.data.experience %}
 [{{ exp.org }} - {{ exp.location }}]{% for pos in exp.positions %}
 {{ pos.title }} ({{ pos.period.from }} - {{ pos.period.to }})
 {% if pos.description %}{{ pos.description|wrap }}{% endif %}
@@ -23,8 +23,8 @@ Work Experience
 {% if education %}
 Education
 =========
-{% for e in cv.education %}
+{% for e in cv.data.education %}
 {{ e.entity }}, {{ e.location }} | {{ e.degree }} {{ e.discipline }}{% endfor %}
 {% endif %}
-~ Last Modified: {{ last_mod }} ~
+~ Last Modified: {{ cv.date_updated }} ~
 

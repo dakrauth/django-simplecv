@@ -12,19 +12,23 @@
     <div class="formats print-hide">
         <select id="viewAs">
             <option value="">-- View as --</option>
-            <option value="{% url 'simplecv:simplecv-format' 'pdf' %}">PDF</option>
-            <option value="{% url 'simplecv:simplecv-format' 'txt' %}">Plain Text</option>
+            <option value="{% url 'simplecv:format' 'pdf' %}">PDF</option>
+            <option value="{% url 'simplecv:format' 'txt' %}">Plain Text</option>
         </select>
         <select id="downloadAs">
             <option value="">-- Download as --</option>
-            <option value="{% url 'simplecv:simplecv-format' 'pdf' %}?download">PDF</option>
-            <option value="{% url 'simplecv:simplecv-format' 'txt' %}?download">Plain Text</option>
-            <option value="{% url 'simplecv:simplecv-format' 'docx' %}?download">MS Word</option>
+            <option value="{% url 'simplecv:format' 'pdf' %}?download">PDF</option>
+            <option value="{% url 'simplecv:format' 'txt' %}?download">Plain Text</option>
+            <option value="{% url 'simplecv:format' 'docx' %}?download">MS Word</option>
         </select>
         <button class="print-link">Print</button>
     </div>
     <div class="cv-container"></div>
-    
+    <footer>
+        <em>Last Modified: {{ cv.date_updated }}</em><br>
+        Generated with <a href="https://github.com/dakrauth/django-simplecv">django-simplecv</a>
+    </footer>
+
 {% verbatim %}
 <script id="cv-html" type="text/x-handlebars-template">
     <div class="cv cv-header">
@@ -88,14 +92,10 @@
             </div>{{/each}}
         </div>
     </div>
-    <footer>
-        <em>Last Modified: {{ last_mod }}</em><br>
-        Generated with <a href="https://github.com/dakrauth/django-simplecv">django-simplecv</a>
-    </footer>
 </div>
 </script>
 {% endverbatim %}
-{{ cv|json_script:"cv-data" }}
+{{ cv.data|json_script:"cv-data" }}
 <script>
     const cvData = JSON.parse(document.getElementById('cv-data').textContent);
     cvData.email = new Handlebars.SafeString(cvData.email);

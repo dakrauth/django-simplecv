@@ -3,13 +3,14 @@ from datetime import datetime
 from docx import Document
 from docx.shared import Inches, Pt
 
-from ..utils import load_cv, max_column_length
+from ..utils import max_column_length
 
 
 def convert(cv, stream):
+    data = cv.data
     doc = Document()
     
-    doc.core_properties.author = cv['name']
+    doc.core_properties.author = data['name']
     doc.core_properties.author = 'CV'
     doc.core_properties.comments = 'Generated via Python 3 and `docx`'
     doc.core_properties.created = datetime.utcnow()
@@ -30,30 +31,30 @@ def convert(cv, stream):
         
     # if image: {image}
 
-    doc.add_heading(cv['name'])
-    urls = ' · '.join(cv['urls'])
-    doc.add_paragraph('{email} · {tel}{urls}'.format(
-        email=cv['email'],
-        tel=cv['tel'],
-        urls=' · ' + urls if urls else ''
+    doc.add_heading(data['name'])
+    urls = ' · '.join(data['urls'])
+    doc.add_paragraph('{email} · {tel}\n{urls}'.format(
+        email=data['email'],
+        tel=data['tel'],
+        urls=urls or ''
     ))
     
     doc.add_heading('Summary', level=2)
-    doc.add_paragraph(cv['summary'])
+    doc.add_paragraph(data['summary'])
     
     doc.add_heading('Skills', level=2)
-    mx = 1 + max_column_length(cv['skills'], 'key')
+    mx = 1 + max_column_length(data['skills'], 'key')
     p = doc.add_paragraph()
-    for i, skill in enumerate(cv['skills']):
+    for i, skill in enumerate(data['skills']):
         p.add_run('{}{:{}}'.format(
             '\n' if i else '',
             '{}:'.format(skill['key']),
             mx
         )).bold = True
-        p.add_run('\t{}'.format(skill['value']))
+        p.add_run('\n{}'.format(skill['value']))
 
     doc.add_heading('Work Experience', level=2)
-    for exp in cv['experience']:
+    for exp in data['experience']:
         p = doc.add_paragraph()
         p.style = bt_style
         r = p.add_run('{} '.format(exp['org']))
@@ -86,10 +87,10 @@ def convert(cv, stream):
             else:
                 p.add_run('\n')
 
-    if cv['education']:
+    if data['education']:
         doc.add_heading('Education', level=2)
         p = doc.add_paragraph()
-        for i, edu in enumerate(cv['education']):
+        for i, edu in enumerate(data['education']):
             deg = edu.get('degree', '')
             dis = edu.get('descipline', '')
             p.add_run('{}{}, {}{}{}'.format(
@@ -101,6 +102,6 @@ def convert(cv, stream):
             ))
 
     p = doc.add_paragraph()
-    p.add_run('Last Modified: {}'.format(cv['last_mod'])).italic = True
+    p.add_run('Last Modified: {}'.format(cv.date_updated)).italic = True
     doc.save(stream)
 
