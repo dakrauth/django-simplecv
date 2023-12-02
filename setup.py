@@ -2,10 +2,6 @@
 import os, sys
 from setuptools import setup, find_packages
 
-if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
-    sys.exit(0)
-
 if os.path.exists('README.rst'):
     with open('README.rst') as f:
         long_description = f.read()
@@ -15,8 +11,6 @@ else:
 simplecv = __import__('simplecv') 
 VERSION = simplecv.get_version()
 
-with open('requirements.txt') as fp:
-    install_requires = fp.read()
 
 setup(
     name='django-simplecv',
@@ -34,14 +28,20 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ),
     packages=find_packages(),
+    install_requires=[
+        "Django>=3.2,<5.0",
+        "reportlab==4.0.7",
+        "pdfdocument==4.0",
+        "python-docx==1.1.0",
+        "pydocx==0.9.10",
+    ],
     include_package_data=True,
     package_data={
         '': ['*.rst'],
         'simplecv': ['templates/simplecv/*'],
     },
-    install_requires=install_requires
 )
