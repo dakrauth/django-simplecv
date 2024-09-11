@@ -12,11 +12,11 @@ class CV(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = [['user', 'label']]
-        ordering = ['-date_updated']
-        get_latest_by = '-date_updated'
+        unique_together = [["user", "label"]]
+        ordering = ["-date_updated"]
+        get_latest_by = "-date_updated"
         verbose_name = "CV"
         verbose_name_plural = "CV's"
 
     def __str__(self):
-        return f'{self.user}: {self.label}'
+        return f"{self.user}: {self.label}"

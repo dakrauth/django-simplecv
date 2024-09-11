@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,19 +14,33 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CV',
+            name="CV",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('label', models.CharField(db_index=True, max_length=50)),
-                ('data', models.JSONField(blank=True)),
-                ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('date_updated', models.DateTimeField(auto_now=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("label", models.CharField(db_index=True, max_length=50)),
+                ("data", models.JSONField(blank=True)),
+                ("date_created", models.DateTimeField(auto_now_add=True)),
+                ("date_updated", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-date_updated'],
-                'get_latest_by': '-date_updated',
-                'unique_together': {('user', 'label')},
+                "ordering": ["-date_updated"],
+                "get_latest_by": "-date_updated",
+                "unique_together": {("user", "label")},
             },
         ),
     ]
