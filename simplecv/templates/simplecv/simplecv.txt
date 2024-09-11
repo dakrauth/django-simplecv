@@ -1,4 +1,4 @@
-{{ cv.data.name }}
+{% autoescape off %}{{ cv.data.name }}
 {{ cv.data.email }} | {{ cv.data.tel }}{% for url in cv.data.urls %} | {{ url }}{% endfor %}
 {% load simplecv_tags %}
 Summary
@@ -26,5 +26,5 @@ Education
 {% for e in cv.data.education %}
 {{ e.entity }}, {{ e.location }} | {{ e.degree }} {{ e.discipline }}{% endfor %}
 {% endif %}
-~ Last Modified: {{ cv.date_updated }} ~
+~ Last Modified: {{ cv.date_updated }} ~{% endautoescape %}
 

@@ -31,7 +31,7 @@ JSON_TEMPLATE = '''{
 
 content_types = {
     'pdf': 'application/pdf',
-    'txt': 'text/plain',
+    'txt': 'text/plain; charset=utf-8',
     'docx': (
         'application/'
         'vnd.openxmlformats-officedocument.wordprocessingml.document'
