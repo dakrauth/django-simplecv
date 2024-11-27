@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-simplecv"
+dynamic = ["version"]
+description = "Simple CV/Résumé generator and exporter."
+license = { file = "LICENSE" }
+readme = { file = "README.rst", content-type = "text/x-rst" }
+keywords = ["django", "resume", "cv"]
+authors = [
+    { name = "David Krauth", email = "dakrauth@gmail.com" },
+]
+requires-python = ">=3.10"
+classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Web Environment",
+        "Framework :: Django",
+        "Framework :: Django :: 4.2",
+        "Framework :: Django :: 5.1",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: Utilities",
+        "Topic :: Education",
+]
+
+dependencies = [
+    "Django>=4.2,<5.2",
+    "reportlab==4.0.7",
+    "pdfdocument==4.0",
+    "python-docx==1.1.0",
+    "pydocx==0.9.10"
+]
+
+[project.urls]
+Homepage = "https://github.com/dakrauth/django-simplecv"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "coverage",
+    "pytest-django",
+    "pytest-cov",
+]
+dev = [
+    "tox",
+    "build",
+    "ipython",
+    "ipdb",
+    "twine",
+    "ruff",
+    "django-extensions",
+    "pytest-sugar",
+    "pytest-clarity"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = [
+    "simplecv",
+    "simplecv.templatetags",
+    "simplecv.migrations",
+    "simplecv.export",
+    "simplecv.management",
+    "simplecv.management.commands",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "simplecv.__version__"}
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+cache-dir = ".dev/ruff"
+line-length = 100
+indent-width = 4
+
+[tool.ruff.lint]
+ignore = ["E741"]
