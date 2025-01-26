@@ -9,9 +9,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("cv_filename")
-        parser.add_argument(
-            "output_type", choices=["html", "docx", "pdf", "txt", "all"]
-        )
+        parser.add_argument("output_type", choices=["html", "docx", "pdf", "txt", "all"])
         parser.add_argument(
             "-y",
             action="store_true",

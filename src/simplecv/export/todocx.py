@@ -3,14 +3,11 @@ from datetime import datetime
 from docx import Document
 from docx.shared import Inches, Pt
 
-from ..utils import max_column_length
-
 
 def convert(cv, stream):
-    data = cv.data
     doc = Document()
 
-    doc.core_properties.author = data["name"]
+    doc.core_properties.author = cv.full_name
     doc.core_properties.author = "CV"
     doc.core_properties.comments = "Generated via Python 3 and `docx`"
     doc.core_properties.created = datetime.utcnow()
@@ -29,54 +26,65 @@ def convert(cv, stream):
     sec.left_margin = Inches(0.5)
     sec.right_margin = Inches(0.5)
 
-    # if image: {image}
+    doc.add_heading(cv.full_name)
+    urls = " · ".join(l.url for l in cv.links.all())
+    p = f"{cv.email} · {cv.phone}"
+    if urls:
+        p = f"{p}\n{urls}"
 
-    doc.add_heading(data["name"])
-    urls = " · ".join(data["urls"])
-    doc.add_paragraph(
-        "{email} · {tel}\n{urls}".format(
-            email=data["email"], tel=data["tel"], urls=urls or ""
-        )
-    )
-
+    doc.add_paragraph(p)
     doc.add_heading("Summary", level=2)
-    doc.add_paragraph(data["summary"])
+    doc.add_paragraph(cv.summary)
 
     doc.add_heading("Skills", level=2)
-    mx = 1 + max_column_length(data["skills"], "key")
-    p = doc.add_paragraph()
-    for i, skill in enumerate(data["skills"]):
-        p.add_run(
-            "{}{:{}}".format("\n" if i else "", "{}:".format(skill["key"]), mx)
-        ).bold = True
-        p.add_run("\n{}".format(skill["value"]))
+
+    skills = [(sk.category, sk.values) for sk in cv.skills.all()]
+    if skills:
+        if 0:
+            mx = 1 + max([len(s[0]) for s in skills])
+            p = doc.add_paragraph()
+            for i, skill in enumerate(skills):
+                cat, values = skill
+                p.add_run("{}{:{}}".format("\n" if i else "", "{}:".format(cat), mx)).bold = True
+                p.add_run(f"\n{values}")
+        else:
+            table = doc.add_table(rows=0, cols=0)
+            table.autofit = False
+            table.allow_autofit = False
+            table.add_column(Inches(1.25))
+            table.add_column(Inches(6.0))
+            for i, (cat, values) in enumerate(skills):
+                row = table.add_row()
+                cells = row.cells
+                cells[0].width = Inches(1.25)
+                cells[0].text = f"{cat}:"
+                cells[1].width = Inches(6.0)
+                cells[1].text = values
 
     doc.add_heading("Work Experience", level=2)
-    for exp in data["experience"]:
+    for org in cv.organizations.all():
         p = doc.add_paragraph()
         p.style = bt_style
-        r = p.add_run("{} ".format(exp["org"]))
+        r = p.add_run(f"{org.name} ")
         r.bold = True
         r.font.size = Pt(13)
-        p.add_run("· {}\n".format(exp["location"])).italic = True
+        p.add_run(f"· {org.location}\n").italic = True
 
-        for i, pos in enumerate(exp["positions"]):
+        for i, pos in enumerate(org.positions.all()):
             if i:
                 p = doc.add_paragraph()
                 p.style = bt_style
 
-            p.add_run("{} ".format(pos["title"])).bold = True
-            p.add_run(
-                "· {} - {}".format(pos["period"]["from"], pos["period"]["to"])
-            ).italic = True
+            p.add_run(f"{pos.title} ").bold = True
+            p.add_run(f"· {pos.started} - {pos.ended}").italic = True
 
-            desc = pos.get("description")
+            desc = pos.summary
             if desc:
-                p.add_run("\n{}".format(desc)).italic = True
+                p.add_run(f"\n{desc}").italic = True
 
-            achs = pos.get("achievements", [])
+            achs = list(pos.iter_achievements)
             if achs:
-                for ach in achs:
+                for ach in pos.iter_achievements:
                     p = doc.add_paragraph(ach)
                     p.style = lb2_style
 
@@ -84,19 +92,19 @@ def convert(cv, stream):
             else:
                 p.add_run("\n")
 
-    if data["education"]:
+    if cv.educations.count():
         doc.add_heading("Education", level=2)
         p = doc.add_paragraph()
-        for i, edu in enumerate(data["education"]):
-            deg = edu.get("degree", "")
-            dis = edu.get("descipline", "")
+        for i, edu in enumerate(cv.educations.all()):
+            deg = edu.result
+            dis = edu.focus
             p.add_run(
                 "{}{}, {}{}{}".format(
                     "\n" if i else "",
-                    edu["entity"],
-                    edu["location"],
-                    ", {}".format(deg) if deg else "",
-                    ", {}".format(dis) if dis else "",
+                    edu.institution,
+                    edu.location,
+                    f", {deg}" if deg else "",
+                    f", {dis}" if dis else "",
                 )
             )
 

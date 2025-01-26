@@ -1,30 +1,32 @@
-{% autoescape off %}{{ cv.data.name }}
-{{ cv.data.email }} | {{ cv.data.tel }}{% for url in cv.data.urls %} | {{ url }}{% endfor %}
+{% autoescape off %}{{ cv.full_name }}
+{{ cv.email }} | {{ cv.phone }}{% if cv.links.count %}
+{% for link in cv.links.all %}{% if forloop.counter0 %} | {% endif %}{{ link.url }}{% endfor %}{% endif %}
 {% load simplecv_tags %}
-Summary
-=======
+{% underline "=" "Summary" %}
 
-{{ cv.data.summary|wrap }}
+{{ cv.summary|wrap }}
 
-Skills
-======
-{% for skill in cv.data.skills %}
-{{ skill.key|stringformat:"s:"|width:"12" }} {{ skill.value }} {% endfor %}
+{% underline "=" "Skills" %}
+{% for skill in cv.skills.all %}
+{{ skill.category|stringformat:"s:"|width:"14" }} {{ skill.values|wrap:"15" }} {% endfor %}
 
-Work Experience
-===============
-{% for exp in cv.data.experience %}
-[{{ exp.org }} - {{ exp.location }}]{% for pos in exp.positions %}
-{{ pos.title }} ({{ pos.period.from }} - {{ pos.period.to }})
-{% if pos.description %}{{ pos.description|wrap }}{% endif %}
-{% if pos.achievements %}{% for ach in pos.achievements %}
-* {{ ach|wrap:"  " }}{% endfor %}{% endif %}
-{% endfor %}{% endfor %}
-{% if education %}
-Education
-=========
-{% for e in cv.data.education %}
-{{ e.entity }}, {{ e.location }} | {{ e.degree }} {{ e.discipline }}{% endfor %}
+{% underline "=" "Work Experience" %}
+{% for org in cv.organizations.all %}
+{% underline "-" org.name "|" org.location %}
+{% for pos in org.positions.all %}
+>>> {{ pos.title }}
+    {{ pos.started }} - {{ pos.ended }}{% if pos.summary %}
+
+{{ pos.summary|wrap }}{% endif %}
+{% for ach in pos.iter_achievements %}
+* {{ ach|wrap:"2" }}{% endfor %}
+{% endfor %}
+{% endfor %}
+{% if cv.educations.count %}
+{% underline "=" "Education" %}
+{% for e in cv.educations.all %}
+{{ e.institution }}, {{ e.location }} | {% if e.result %}{{ e.result }}, {% endif %}{{ e.focus }}{% endfor %}
 {% endif %}
-~ Last Modified: {{ cv.date_updated }} ~{% endautoescape %}
+~ Last Modified: {{ cv.date_updated }} ~
+{% endautoescape %}
 

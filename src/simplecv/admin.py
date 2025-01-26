@@ -1,25 +1,62 @@
-import json
-from django.db import models
 from django.contrib import admin
-from django.forms.widgets import Textarea
 
-from .models import CV
+from . import models as cv
 
-
-class JSONTextarea(Textarea):
-    def __init__(self, attrs=None):
-        super().__init__(attrs)
-        self.attrs["style"] = "font-family: monospace; width: 95%; min-height: 60em"
-
-    def format_value(self, value):
-        return json.dumps(json.loads(str(value)), indent=4)
+PreferredInline = admin.TabularInline
 
 
-@admin.register(CV)
+class SkillInline(PreferredInline):
+    model = cv.Skill
+    extra = 1
+
+
+class LinkInline(PreferredInline):
+    model = cv.Link
+    extra = 1
+
+
+class EducationInline(admin.StackedInline):
+    model = cv.Education
+    extra = 1
+
+
+class OrganizationInline(admin.StackedInline):
+    model = cv.Organization
+    extra = 1
+
+
+class PositionInline(admin.StackedInline):
+    model = cv.Position
+    extra = 1
+
+
+@admin.register(cv.Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ["name", "cv"]
+    fields = ["cv", "name", "previous", "staffed_by", "location"]
+    inlines = [PositionInline]
+
+
+@admin.register(cv.CV)
 class CVAdmin(admin.ModelAdmin):
     list_display = ["label", "user", "date_updated"]
-    fields = ["user", "label", "date_created", "date_updated", "data"]
+    fields = [
+        "user",
+        "label",
+        "full_name",
+        "email",
+        "phone",
+        "summary",
+        "image",
+        "data",
+        "date_created",
+        "date_updated",
+    ]
     readonly_fields = ["date_created", "date_updated"]
-    formfield_overrides = {
-        models.JSONField: {"widget": JSONTextarea},
-    }
+
+    inlines = [
+        SkillInline,
+        LinkInline,
+        EducationInline,
+        OrganizationInline,
+    ]

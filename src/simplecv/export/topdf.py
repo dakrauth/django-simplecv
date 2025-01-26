@@ -25,59 +25,56 @@ class PDFDocumentCV(PDFDocument):
 
 
 def convert(cv, stream):
-    data = cv.data
     doc = PDFDocumentCV(stream)
     doc.init_report()
-    doc.h1(data["name"])
+    doc.h1(cv.full_name)
     doc.hr_mini()
 
-    urls = " · ".join(data["urls"])
-    doc.p(
-        "{email} · {tel}\n{urls}".format(
-            email=data["email"], tel=data["tel"], urls=urls
-        )
-    )
+    urls = ""
+    if cv.links.count():
+        urls = " · ".join([l.url for l in cv.links.all()])
 
+    doc.p(f"{cv.email} · {cv.phone}\n{urls}")
     doc.h2("Summary")
-    doc.p(data["summary"])
+    doc.p(cv.summary)
 
-    doc.h2("Skills")
-    doc.table([(sk["key"], sk["value"]) for sk in data["skills"]], [inch, inch * 5.5])
+    if cv.skills.count():
+        doc.h2("Skills")
+        doc.table([(sk.category, sk.values) for sk in cv.skills.all()], [inch, inch * 5.5])
 
     doc.h2("Work Experience")
-    for i, exp in enumerate(data["experience"]):
+    for i, org in enumerate(cv.organizations.all()):
         if i:
             doc.spacer()
 
-        doc.h3(exp["org"])
-        doc.p("{}".format(exp["location"]))
+        doc.h3(org.name)
+        doc.mini_html(f"<p><em>{org.location}</em></p>")
 
-        for i, pos in enumerate(exp["positions"]):
-            doc.p(
-                "{} · {} - {}".format(
-                    pos["title"], pos["period"]["from"], pos["period"]["to"]
-                )
+        for pos in org.positions.all():
+            doc.spacer()
+            doc.mini_html(
+                f"<p><strong>{pos.title}</strong> · <em>{pos.started} - {pos.ended}</em></p>"
             )
 
-            desc = pos.get("description")
+            desc = pos.summary
             if desc:
-                doc.p(desc)
+                doc.mini_html(f"<p><em>{desc}</em></p>")
 
-            achs = pos.get("achievements", [])
-            if achs:
+            if pos.achievements:
+                achs = list(pos.iter_achievements)
                 doc.ul(achs)
 
-    if data["education"]:
+    if cv.educations.count():
         doc.h2("Education")
-        for i, edu in enumerate(data["education"]):
-            deg = edu.get("degree", "")
-            dis = edu.get("descipline", "")
+        for edu in cv.educations.all():
+            deg = edu.result
+            dis = edu.focus
             doc.p(
                 "{}, {}{}{}".format(
-                    edu["entity"],
-                    edu["location"],
-                    ", {}".format(deg) if deg else "",
-                    ", {}".format(dis) if dis else "",
+                    edu.institution,
+                    edu.location,
+                    f", {deg}" if deg else "",
+                    f", {dis}" if dis else "",
                 )
             )
 

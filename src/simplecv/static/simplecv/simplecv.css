@@ -3,7 +3,6 @@ body {
     padding: 0;
     color: #333;
     font-family: 'Lato', helvetica, arial, sans-serif;
-    font-size: 15px;
 }
 a { text-decoration: none; }
 .text-center { text-align: center }
@@ -30,16 +29,22 @@ h3 {
     margin: 0;
     font-size: 1.2em;
     font-weight: bold;
-    background-color: #eee;
     padding: 4px 6px 2px 2px;
 }
 h4 { color: #555; font-size: 1em; margin: 2px 0; }
 p { margin: 2px 0; }
+.header { display: flex; gap: 1em; }
 .web > ul {
     padding: 0;
     margin:  0;
     list-style-type: none;
+    display: flex;
 }
+.web > ul li:not(:last-child):after {
+    content: "\00b7";
+    margin: 0 .25rem;
+}
+.web .link-url { display: none; }
 .skills {
     margin: 0;
     display: grid;
@@ -52,13 +57,23 @@ p { margin: 2px 0; }
 }
 .skills > dd { margin: 0; padding: 0; }
 .experience { margin-bottom: 1em; }
-.experience .location { float: right; }
+.experience header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eee;
+}
+.experience header .location {
+    font-style: italic;
+    font-weight: normal;
+    padding-right: .5rem;
+}
 .experience p { padding-left: 2px; font-style: italic; }
 .experience ul { padding-left: 0.5em; }
 .experience p, .experience ul { 
     margin: 0; text-align: justify; 
 }
-.location { font-style: italic; font-weight: normal; font-size: smaller; }
+
 .period { font-weight: normal; font-size: smaller; display: block; }
 ul.achievements { 
     margin: 0 0 0.75em 0;
@@ -81,7 +96,7 @@ dt { font-weight: 400; }
 }
 @media print {
     body {
-        font-size: .65em;
+        font-size: .65rem;
         margin: 0;
         padding: 0;
         color: #000;
@@ -92,17 +107,15 @@ dt { font-weight: 400; }
     .cv h3 { border-bottom: 1px solid #999; }
     a { color: #333; }
     .experience dl { padding-left: 4px; border-left: none; }
-    .vcard.header { text-align: center; }
     .print-hide { display: none; }
+    .web .link-url { display: inline; }
+    .web .link-label { display: none; }
+    .web > ul { justify-content: center; }
 }
 @media screen {
-    .vcard .fn, .vcard .web {
-        padding-left: 90px;
-    }
     .header > img {
         width: 80px;
         border-radius: 40px;
-        float: left;
     }
     .cv {
         padding: 0 4em;

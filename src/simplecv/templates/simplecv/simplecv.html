@@ -3,10 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title></title>
+    <title>CV for {{ cv.full_name }}</title>
     <link href="https://fonts.googleapis.com/css?family=Fjord+One" rel="stylesheet">
-    <link rel="stylesheet" href="{% static "simplecv/simplecv.css" %}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
+    <link rel="stylesheet" href="{% static "simplecv/simplecv.css" %}?v=2">
 </head>
 <body>
     <div class="formats print-hide">
@@ -23,87 +22,84 @@
         </select>
         <button class="print-link">Print</button>
     </div>
-    <div class="cv-container"></div>
+    <div class="cv-container">
+        <div class="cv cv-header">
+            <div class="vcard header">
+                {% if cv.image %}
+                <img class="print-hide" src="{{ cv.image }}">
+                {% endif %}
+                <div>
+                    <h1 class="fn n">{{ cv.full_name }}</h1>
+                    <div class="web">
+                        <span class="email">{{ cv.email }}</span>
+                        &middot;
+                        <a href="tel:{{ cv.phone }}">{{ cv.phone }}</a>
+                        {% if cv.links.count %}
+                        <ul>{% for link in cv.links.all %}
+                            <li>
+                                <a href="{{ link.url }}">
+                                    <span class="link-label">{{ link.label }}</span>
+                                    <span class="link-url">{{ link.url}}</span>
+                                </a>
+                            </li>{% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cv cv-summary">
+            <h2>Summary</h2>
+            <p class="summary">{{ cv.summary }}</p>
+        </div>
+        <div class="cv cv-skills">
+            <h2>Skills</h2>
+            <dl class="skills">{% for skill in cv.skills.all %}
+                <dt class="skillarea">{{ skill.category }}:</dt>
+                <dd class="skillset">{{ skill.values }}</dd>{% endfor %}
+            </dl>
+        </div>
+        <div class="cv cv-experience">
+            <h2>Work Experience</h2>
+            {% for org in cv.organizations.all %}
+            <div class="experience vevent vcard">
+                <header>
+                    <h3 class="org">{{ org }}</h3>
+                    <span class="location">{{ org.location }}</span>
+                </header>
+                {% for pos in org.positions.all %}
+                <h4 class="title">
+                    {{ pos.title }}
+                    <span class="period">
+                        <abbr class="dtstart">{{ pos.started }}</abbr> &ndash;
+                        <abbr class="dtend">{{ pos.ended }}</abbr>
+                    </span>
+                </h4>
+                <p class="description">{{ pos.summary }}</p>
+                <ul class="achievements">{% for ach in pos.iter_achievements %}
+                    <li>{{ ach }}</li>{% endfor %}
+                </ul>
+                {% endfor %}
+            </div>{% endfor %}
+        </div>
+        <div class="cv cv-education">
+            <h2>Education</h2>
+            <div id="education">{% for ed in cv.educations.all %}
+                <div class="degree">
+                    <span class="entity">{{ ed.institution }}</span>
+                    <span class="location">{{ ed.location }}</span>
+                    <span class="degree-type">{{ ed.result }}</span>
+                    <span class="discipline">{{ ed.focus }}</span>
+                </div>{% endfor %}
+            </div>
+        </div>
+    </div>
     <footer>
         <em>Last Modified: {{ cv.date_updated }}</em><br>
         Generated with <a href="https://github.com/dakrauth/django-simplecv">django-simplecv</a>
     </footer>
 
-{% verbatim %}
-<script id="cv-html" type="text/x-handlebars-template">
-    <div class="cv cv-header">
-        <div class="vcard header clearfix">
-            {{#if image}}<img class="print-hide" src="{{ image }}">{{/if}}
-            <h1 class="fn n">{{ name }}</h1>
-            <div class="web">
-                <span class="email">{{ email }}</span>
-                &middot;
-                <a href="tel:{{ tel }}">{{ tel }}</a>
-                {{#if urls}}
-                <ul>
-                    {{#each urls}}
-                    <li><a href="{{ this }}">{{ this }}</a></li>
-                    {{/each}}
-                </ul>
-                {{/if}}
-            </div>
-        </div>
-    </div>
-    <div class="cv cv-summary">
-        <h2>Summary</h2>
-        <p class="summary">{{ summary }}</p>
-    </div>
-    <div class="cv cv-skills">
-        <h2>Skills</h2>
-        <dl class="skills clearfix">{{#each skills}}
-            <dt class="skillarea">{{ key }}:</dt>
-            <dd class="skillset">{{ value }}</dd>{{/each}}
-        </dl>
-    </div>
-    <div class="cv cv-experience">
-        <h2>Work Experience</h2>{{#each experience}}
-        <div class="experience vevent vcard">
-            <h3>
-                <span class="org">{{ this.org }}</span>
-                <span class="location">{{ this.location }}</span>
-            </h3>
-            {{#each positions}}
-            <h4 class="title">
-                {{ this.title }}
-                <span class="period">
-                    <abbr class="dtstart">{{ this.period.from }}</abbr> &ndash;
-                    <abbr class="dtend">{{ this.period.to }}</abbr>
-                </span>
-            </h4>
-            <p class="description">{{ this.description }}</p>
-            <ul class="achievements">{{#each this.achievements }}
-                <li>{{ this }}</li>{{/each}}
-            </ul>{{/each}}
-        </div>{{/each}}
-    </div>
-    <div class="cv cv-education">
-        <h2>Education</h2>
-        <div id="education">{{#each education}}
-            <div class="degree">
-                <span class="entity">{{ entity }}</span>
-                <span class="location">{{ location }}</span>
-                <span class="degree-type">{{ degree }}</span>
-                <span class="discipline">{{ discipline }}</span>
-            </div>{{/each}}
-        </div>
-    </div>
-</div>
-</script>
-{% endverbatim %}
-{{ cv.data|json_script:"cv-data" }}
 <script>
-    const cvData = JSON.parse(document.getElementById('cv-data').textContent);
-    cvData.email = new Handlebars.SafeString(cvData.email);
-    document.querySelector('.cv-container').innerHTML = Handlebars.compile(
-        document.getElementById('cv-html').textContent
-    )(cvData);
-
-    document.querySelector('title').textContent = 'CV for ' + cvData.name;
     document.querySelector('.print-link').addEventListener('click', evt=>{
         window.print();
         evt.preventDefault();

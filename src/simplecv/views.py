@@ -17,8 +17,9 @@ def cv_view(request, ext="html", **query_params):
     if ext not in utils.content_types:
         raise http.Http404(f'Unknown CV conversion type: "{ext}"')
 
+    cv = CV.objects.full_get()
     try:
-        cv = CV.objects.get(**query_params) if query_params else CV.objects.latest()
+        cv = cv.get(**query_params) if query_params else cv.latest()
     except CV.DoesNotExist:
         raise http.Http404
 
