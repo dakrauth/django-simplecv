@@ -82,7 +82,7 @@ class Organization(models.Model):
     cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name="organizations")
 
     class Meta:
-        ordering = ["-start_date"]
+        ordering = ["-end_date", "-start_date"]
 
     def __str__(self):
         return self.name
