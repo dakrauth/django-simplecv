@@ -1,41 +1,5 @@
 import random
 
-JSON_TEMPLATE = """{
-    "name": "",
-    "email": "",
-    "tel": "",
-    "urls": [],
-    "image": "",
-    "summary": "",
-    "skills": [{"key": "", "value": ""}],
-    "experience": [{
-        "org": "",
-        "location": "",
-        "positions": [
-            {
-                "period": {"from": "", "to": ""},
-                "title": "",
-                "description": "",
-                "achievements": []
-            }
-        ]
-    }],
-    "education": [{
-        "entity": "",
-        "location": "",
-        "discipline": "",
-        "degree": ""
-    }]
-}"""
-
-
-content_types = {
-    "pdf": "application/pdf",
-    "txt": "text/plain; charset=utf-8",
-    "docx": ("application/" "vnd.openxmlformats-officedocument.wordprocessingml.document"),
-    "html": None,
-}
-
 
 def int_entity(c):
     return "&#{};".format(ord(c))

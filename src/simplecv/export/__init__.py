@@ -6,33 +6,20 @@ from .todocx import convert as docx_convert
 from .topdf import convert as pdf_convert
 
 
-def make_template_converter(template):
-    def _converter(cv, stream):
-        content = render_to_string(template, {"cv": cv})
-        stream.write(content)
-        return content
-
-    return _converter
-
-
-EXPORTERS = {
-    "docx": docx_convert,
-    "pdf": pdf_convert,
-    "txt": make_template_converter("simplecv/simplecv.txt"),
-    "html": make_template_converter("simplecv/simplecv.html"),
-}
-
-
-all_exports_types = set(EXPORTERS.keys())
+def txt_convert(cv, stream):
+    content = render_to_string("simplecv/simplecv.txt", {"cv": cv})
+    stream.write(content)
+    return content
 
 
 def export(stream, cv, kind):
     exporter = EXPORTERS.get(kind)
-    if exporter is None:
-        raise KeyError('Unknown exporter: "{}"'.format(kind))
 
     if not stream:
         stream = BytesIO()
 
     exporter(cv, stream)
     return stream
+
+
+EXPORTERS = {"docx": docx_convert, "pdf": pdf_convert, "txt": txt_convert}

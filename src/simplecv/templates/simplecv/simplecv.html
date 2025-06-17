@@ -11,14 +11,14 @@
     <div class="formats print-hide">
         <select id="viewAs">
             <option value="">-- View as --</option>
-            <option value="{% url 'simplecv:format' 'pdf' %}">PDF</option>
-            <option value="{% url 'simplecv:format' 'txt' %}">Plain Text</option>
+            <option value="{% url 'simplecv:format' cv.user.username cv.label 'pdf' %}">PDF</option>
+            <option value="{% url 'simplecv:format' cv.user.username cv.label 'txt' %}">Plain Text</option>
         </select>
         <select id="downloadAs">
             <option value="">-- Download as --</option>
-            <option value="{% url 'simplecv:format' 'pdf' %}?download">PDF</option>
-            <option value="{% url 'simplecv:format' 'txt' %}?download">Plain Text</option>
-            <option value="{% url 'simplecv:format' 'docx' %}?download">MS Word</option>
+            <option value="{% url 'simplecv:format' cv.user.username cv.label 'pdf' %}?download">PDF</option>
+            <option value="{% url 'simplecv:format' cv.user.username cv.label 'txt' %}?download">Plain Text</option>
+            <option value="{% url 'simplecv:format' cv.user.username cv.label 'docx' %}?download">MS Word</option>
         </select>
         <button class="print-link">Print</button>
     </div>

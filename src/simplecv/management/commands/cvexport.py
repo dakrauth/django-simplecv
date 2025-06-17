@@ -19,14 +19,10 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if options["output_type"] == "all":
-            output_types = export.all_exports_types
-        else:
-            output_types = [options["output_type"]]
+        output_types = set(export.EXPORTERS) if options["output_type"] == "all" else [options["output_type"]]
 
         dirname, cv_filename = os.path.split(options["cv_filename"])
         base, ext = os.path.splitext(cv_filename)
-
         cv = load_cv(options["cv_filename"])
         for kind in output_types:
             output_filename = os.path.join(dirname, "{}.{}".format(base, kind))

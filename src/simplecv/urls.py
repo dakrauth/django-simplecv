@@ -1,9 +1,13 @@
-from django.urls import re_path
+from django.urls import path
 from . import views
 
 app_name = "simplecv"
 
 urlpatterns = [
-    re_path(r"^$", views.cv_view, name="cv"),
-    re_path(r"^cv\.(\w+)$", views.cv_view, name="format"),
+    path("<str:user_name>/<str:label>/", views.CVDetailView.as_view(), name="cv"),
+    path(
+        "<str:user_name>/<str:label>.<str:ext>",
+        views.CVDetailExportView.as_view(),
+        name="format"
+    ),
 ]

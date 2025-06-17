@@ -5,14 +5,14 @@ User = get_user_model()
 
 
 class CVManager(models.Manager):
-    def full_get(self, **kwargs):
-        return self.prefetch_related(
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(
             "skills",
             "links",
             "educations",
             "organizations",
             "organizations__positions",
-        ).filter(**kwargs)
+        )
 
 
 class CV(models.Model):
@@ -40,7 +40,14 @@ class CV(models.Model):
         return f"{self.user}: {self.label}"
 
 
-class Skill(models.Model):
+
+class CVSaveMixin:
+    def save(self, *args, **kwargs):
+        self.cv.save()
+        return super().save(*args, **kwargs)
+
+
+class Skill(CVSaveMixin, models.Model):
     category = models.CharField(max_length=20)
     values = models.CharField(max_length=150)
     cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name="skills")
@@ -53,7 +60,7 @@ class Skill(models.Model):
             yield val.strip()
 
 
-class Link(models.Model):
+class Link(CVSaveMixin, models.Model):
     label = models.CharField(max_length=12)
     url = models.URLField()
     cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name="links")
@@ -62,7 +69,7 @@ class Link(models.Model):
         return self.label
 
 
-class Education(models.Model):
+class Education(CVSaveMixin, models.Model):
     institution = models.CharField(max_length=50)
     location = models.CharField(max_length=50, blank=True)
     start_date = models.DateField(blank=True, null=True)
@@ -72,7 +79,12 @@ class Education(models.Model):
     cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name="educations")
 
 
-class Organization(models.Model):
+class OrganizationManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by(models.F("end_date").desc(nulls_first=True))
+
+
+class Organization(CVSaveMixin, models.Model):
     name = models.CharField(max_length=50)
     previous = models.CharField(max_length=50, blank=True)
     staffed_by = models.CharField(max_length=50, blank=True)
@@ -81,8 +93,7 @@ class Organization(models.Model):
     end_date = models.DateField(blank=True, null=True)
     cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name="organizations")
 
-    class Meta:
-        ordering = ["-end_date", "-start_date"]
+    objects = OrganizationManager()
 
     def __str__(self):
         return self.name
@@ -95,6 +106,13 @@ class Position(models.Model):
     summary = models.CharField(max_length=500, blank=True)
     achievements = models.TextField(blank=True)
     org = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="positions")
+
+    class Meta:
+        ordering = ["-end_date"]
+
+    def save(self, *args, **kwargs):
+        self.org.save()
+        return super().save(*args, **kwargs)
 
     def date_format(self, dt):
         return dt.strftime("%m/%Y").lstrip("0")
