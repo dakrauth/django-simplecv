@@ -1,10 +1,8 @@
 django-simplecv
 ===============
 
-A simple Django app for rendering JSON-based CV's / Résumés into HTML, PDF,
+A simple Django app for rendering CV's / Résumés into HTML, PDF,
 MS Word docx, and plain text formats.
-
-The simple JSON schema is exemplified in ``simplecv.utils.JSON_TEMPLATE``.
 
 The management command ``simplecv`` will also (batch) convert a specified CV file.
 
@@ -27,9 +25,7 @@ Or, download and/or fork::
 Usage
 -----
 
-* Add ``simplecv`` to the your project's ``settings.INSTALLED_APPS``
-* For a default CV, create a JSON file matching the simple schema on your system
-* Add ``SIMPLECV_FILENAME = '<path/to/cv.json>'`` to your settings
+Add ``simplecv`` to the your project's ``settings.INSTALLED_APPS``
 
 License
 -------
