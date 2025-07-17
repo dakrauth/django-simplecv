@@ -1,12 +1,13 @@
 [build-system]
-requires = ["setuptools>=61.0.0"]
+requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-simplecv"
 dynamic = ["version"]
 description = "Simple CV/Résumé generator and exporter."
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = [ "LICENSE" ]
 readme = { file = "README.rst", content-type = "text/x-rst" }
 keywords = ["django", "resume", "cv"]
 authors = [
@@ -21,7 +22,6 @@ classifiers = [
         "Framework :: Django :: 5.1",
         "Framework :: Django :: 5.2",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.10",
