@@ -2,7 +2,7 @@
 Simple CV/Résumé generator and exporter.
 """
 
-__version__ = "0.5"
+__version__ = "0.6"
 VERSION = tuple(int(i) for i in __version__.split("."))
 
 

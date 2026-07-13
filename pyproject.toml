@@ -13,31 +13,29 @@ keywords = ["django", "resume", "cv"]
 authors = [
     { name = "David Krauth", email = "dakrauth@gmail.com" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Django",
-        "Framework :: Django :: 4.2",
-        "Framework :: Django :: 5.1",
         "Framework :: Django :: 5.2",
+        "Framework :: Django :: 6.0",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Utilities",
         "Topic :: Education",
 ]
 
 dependencies = [
-    "Django>=4.2,<6.0",
-    "reportlab==4.2.5",
-    "pdfdocument==4.0",
-    "python-docx==1.1.2",
-    "pydocx==0.9.10"
+    "Django>=5.2,<6.1",
+    "reportlab>=4.2.5",
+    "pdfdocument>=4.0",
+    "python-docx>=1.1.2",
+    "pydocx>=0.9.10"
 ]
 
 [project.urls]
